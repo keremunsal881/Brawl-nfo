@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brawler Database | 100 Elite</title>
+    <title>VIPER INFOS | Database</title>
     <style>
         :root { --gold: #f1c40f; --blue: #3498db; --bg: #0a0b10; --success: #2ecc71; }
         body { background: var(--bg); color: white; font-family: 'Arial Black', sans-serif; margin: 0; padding: 20px; }
+        header { text-align: center; padding: 25px; border-bottom: 4px solid var(--gold); background: #12141c; margin-bottom: 30px; }
         
-        header { text-align: center; padding: 20px; border-bottom: 4px solid var(--gold); background: #12141c; margin-bottom: 30px; }
-        
-        /* Kutu Kutu Grid Yapısı */
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
@@ -19,131 +17,87 @@
             margin: 0 auto; 
         }
 
-        /* Her Bir Brawler Kutusu */
         .card { 
             background: #1c1f26; 
             border-radius: 15px; 
-            padding: 10px; 
+            padding: 12px; 
             text-align: center; 
             border: 2px solid #333; 
-            transition: all 0.3s ease;
+            transition: 0.2s;
             cursor: pointer;
         }
-        .card:hover { 
-            border-color: var(--blue); 
-            transform: translateY(-5px); 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
+        .card:hover { border-color: var(--gold); transform: scale(1.05); }
         .card img { 
             width: 100%; 
             border-radius: 10px; 
-            background: #000; 
             aspect-ratio: 1/1; 
             object-fit: cover;
-            margin-bottom: 10px;
+            background: #000;
         }
-        .name { font-size: 0.9em; text-transform: uppercase; color: #fff; letter-spacing: 1px; }
+        .name { margin-top: 10px; font-size: 0.85em; text-transform: uppercase; color: #fff; }
 
-        /* Tıklayınca Açılan Panel (Modal) */
+        /* Modal / Bilgi Paneli */
         #modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.9); 
-            z-index: 1000; 
-            justify-content: center; 
-            align-items: center; 
-            backdrop-filter: blur(8px); 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; 
+            backdrop-filter: blur(5px); 
         }
         .modal-box { 
-            background: #1c1f26; 
-            width: 85%; 
-            max-width: 450px; 
-            border-radius: 25px; 
-            padding: 30px; 
-            border: 3px solid var(--gold); 
-            text-align: center; 
-            position: relative; 
-            animation: popIn 0.3s ease;
+            background: #1c1f26; width: 90%; max-width: 400px; border-radius: 20px; 
+            padding: 25px; border: 2px solid var(--gold); text-align: center; 
         }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        
-        .close { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #ff4d4d; cursor: pointer; }
-        .m-img { width: 150px; border-radius: 20px; border: 3px solid var(--gold); margin-bottom: 20px; }
-        
-        /* Byron Tarzı Yeşil Çizgili Açıklama */
+        .m-img { width: 120px; border-radius: 15px; border: 2px solid var(--gold); margin-bottom: 15px; }
         .m-desc { 
-            font-family: 'Segoe UI', sans-serif; 
-            line-height: 1.5; 
-            color: #ecf0f1; 
-            background: #2d3436; 
-            padding: 15px; 
-            border-radius: 10px; 
-            text-align: left; 
-            border-left: 6px solid var(--success); 
+            background: #2d3436; padding: 15px; border-radius: 10px; text-align: left; 
+            border-left: 5px solid var(--success); font-family: sans-serif; font-size: 0.95em;
         }
+        .close { float: right; cursor: pointer; color: #ff4d4d; font-size: 25px; }
     </style>
 </head>
 <body>
 
-<header><h1>BRAWLER DATABASE</h1></header>
+<header><h1>VIPER INFOS</h1></header>
 
-<div class="grid" id="mainGrid">
-    </div>
+<div class="grid" id="mainGrid"></div>
 
 <div id="modal">
     <div class="modal-box">
         <span class="close" onclick="closeM()">&times;</span>
         <img id="mImg" class="m-img" src="">
-        <h2 id="mTitle" style="color:var(--gold); margin:0 0 15px 0;"></h2>
+        <h2 id="mTitle" style="color:var(--gold); margin-bottom:15px;"></h2>
         <div id="mDesc" class="m-desc"></div>
     </div>
 </div>
 
 <script>
-    // Tam 100 Karakterlik Veri Seti
-    const list = [
-        { n: "SIRIUS", i: "sirius.jpeg", d: "Güneş enerjisiyle hasar verir. Süper özelliğiyle bir gölge kopyası oluşturur." },
+    const data = [
+        { n: "SIRIUS", i: "sirius.jpeg", d: "Güneş enerjisiyle çalışan mermiler atar. Süper özelliğiyle bir gölge kopyası oluşturur." },
         { n: "BUZZ", i: "Screenshot 2026-03-17 13.00.02.png", d: "Fırlattığı kanca ile rakiplerine tutunur ve yanlarına uçarak onları kısa süreliğine sersemletir." },
-        { n: "CROW", i: "https://cdn.brawlstats.com/character-arts/16000017.png", d: "Zehirli hançerler fırlatır. Süper özelliği havalanarak etrafına zehirli hançerler saçar." },
-        { n: "EDGAR", i: "https://cdn.brawlstats.com/character-arts/16000043.png", d: "Hızlı yumruklar atarak can tazeler. Süper özelliği ile rakiplerin üzerine zıplar." },
-        { n: "BYRON", i: "https://cdn.brawlstats.com/character-arts/16000044.png", d: "Rakipleri zamanla zayıflatır, dostlarını ise iyileştirir. Stratejik destek sağlar." },
-        { n: "SHELLY", i: "https://cdn.brawlstats.com/character-arts/16000000.png", d: "Geniş açılı saçmalar atar. Süper özelliği yakından aşırı yüksek hasar verir." },
-        { n: "COLT", i: "https://cdn.brawlstats.com/character-arts/16000005.png", d: "Doğrusal ve uzun menzilli mermi yağmuru başlatır. Duvarları delebilir." },
-        { n: "SPIKE", i: "https://cdn.brawlstats.com/character-arts/16000007.png", d: "Patlayan kaktüsler atar. Süper özelliği düşmanları yavaşlatır ve hasar verir." },
-        { n: "LEON", i: "https://cdn.brawlstats.com/character-arts/16000019.png", d: "Kısa süreliğine tamamen görünmez olur. Yakın mesafeden suikastçıdır." },
-        { n: "MORTIS", i: "https://cdn.brawlstats.com/character-arts/16000016.png", d: "Hızlı hamlelerle rakiplerin arasından geçer. Yarasalarıyla can çalar." }
-        // Liste otomatik olarak 100'e tamamlanıyor...
+        { n: "BYRON", i: "https://cdn.brawlstats.com/character-arts/16000044.png", d: "Rakipleri zamanla zayıflatır, dostlarını iyileştirir. Stratejik destek sağlar." },
+        { n: "CROW", i: "https://cdn.brawlstats.com/character-arts/16000017.png", d: "Zehirli hançerler fırlatır. Süper özelliği havalanarak etrafına zehirli hançerler saçar." }
     ];
 
-    // Eksik olanları 100'e tamamla
-    for(let j=11; j<=100; j++) {
-        list.push({ n: "BRAWLER " + j, i: "", d: "Teknik analiz: Yüksek mobilite ve alan kontrolü sağlayan süper yeteneklere sahiptir." });
+    // Geri kalan 100'e kadar olan kutuları "Gizli Veri" olarak ekle (Siyah ekran olmasın diye)
+    for(let i=5; i<=100; i++) {
+        data.push({ n: "DATA-" + i, i: "", d: "Bu karakter için teknik analiz henüz yüklenmedi. Veritabanı güncelleniyor..." });
     }
 
     const grid = document.getElementById('mainGrid');
-
-    list.forEach(b => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        // Resim yoksa yer tutucu (placeholder) koyar
-        const imgSrc = b.i || `https://placehold.co/200/1c1f26/gold?text=${b.n}`;
-        div.innerHTML = `<img src="${imgSrc}"><div class="name">${b.n}</div>`;
-        div.onclick = () => openM(b.n, imgSrc, b.d);
-        grid.appendChild(div);
+    data.forEach(b => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        const imgSrc = b.i || `https://placehold.co/200/1c1f26/333?text=?`;
+        card.innerHTML = `<img src="${imgSrc}"><div class="name">${b.n}</div>`;
+        card.onclick = () => {
+            document.getElementById('mTitle').innerText = b.n;
+            document.getElementById('mImg').src = imgSrc;
+            document.getElementById('mDesc').innerText = b.d;
+            document.getElementById('modal').style.display = 'flex';
+        };
+        grid.appendChild(card);
     });
 
-    function openM(title, img, desc) {
-        document.getElementById('mTitle').innerText = title;
-        document.getElementById('mImg').src = img;
-        document.getElementById('mDesc').innerText = desc;
-        document.getElementById('modal').style.display = 'flex';
-    }
-
     function closeM() { document.getElementById('modal').style.display = 'none'; }
-    window.onclick = (e) => { if(e.target.id == 'modal') closeM(); }
 </script>
-
 </body>
 </html>
